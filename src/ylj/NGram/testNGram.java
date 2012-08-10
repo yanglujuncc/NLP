@@ -174,6 +174,7 @@ public static void  testGetNNearestNegihbor2(){
 		*/
 	}
 
+
 	public static void main(String[] args)
 	{
 		testGetOtherGrams();

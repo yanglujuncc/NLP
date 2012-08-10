@@ -378,7 +378,7 @@ public class NGramOccTable {
 				continue;
 			
 			GramVector<Integer> otherV=getIntVector(gramString);
-			double simlarity=SimilarityComputer.compute(thisVector.vector, otherV.vector);
+			double simlarity=SimilarityComputer.computeInt(thisVector.vector, otherV.vector);
 			Pair<GramVector<Integer>,Double> aNewPair=new Pair<GramVector<Integer>,Double>();
 			aNewPair.first=otherV;
 			aNewPair.second=simlarity;

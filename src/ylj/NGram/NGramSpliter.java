@@ -1,30 +1,31 @@
 package ylj.NGram;
-import java.util.Arrays;
+
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.PropertyConfigurator;
-
 import ylj.Segmentation.SimpleWordSegmentater;
+import  ylj.Util.StringRecognizer;
 
-
-public class NGramSpliter {
+public class NGramSpliter implements Serializable{
 	private int N;
 	private Map<String,Integer> counterMap=new HashMap<String,Integer>();
 	
 	
 	String subSentenceSplitSign_reg = "((#((\\d)|(\\w))*)|,|\\.|;|!|\\?|~| |·|，|、|。|；|！|？|\t|\\+|　)+";
 	Pattern aSplitPattern=Pattern.compile(subSentenceSplitSign_reg);
-	SimpleWordSegmentater wordSegmentater=new SimpleWordSegmentater();
+	//SimpleWordSegmentater wordSegmentater=new SimpleWordSegmentater();
 	
 	
 	public NGramSpliter(int n){
 		N=n;
 	}
-	
+	public int getGramN(){
+		return N;
+	}
 	public void addCounter(String term){
 		
 		int counter=0;
@@ -47,10 +48,10 @@ public class NGramSpliter {
 		for(String sentence:subSentences){
 			preWords.clear();
 			//得到单个汉字 或  英文单词
-			List<String> words=wordSegmentater.makeSegment(sentence);
+			List<String> words=SimpleWordSegmentater.makeSegmentGlobal(sentence);
 			
 			for(String word:words){
-				if(SimpleWordSegmentater.isCN_zhWord(word))
+				if(StringRecognizer.isCN_zhWord(word))
 				{
 					preWords.add(word);
 					if(preWords.size()==N)
@@ -67,7 +68,7 @@ public class NGramSpliter {
 					
 				}
 				
-				else if(SimpleWordSegmentater.isEnWord(word))
+				else if(StringRecognizer.isEnWord(word))
 				{
 					instanceList.add(word.toString());
 					preWords.clear();

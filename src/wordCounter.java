@@ -15,6 +15,7 @@ import org.apache.log4j.PropertyConfigurator;
 
 import ylj.Segmentation.SimpleWordSegmentater;
 import ylj.Util.FilesInput;
+import ylj.Util.StringRecognizer;
 
 public class wordCounter {
 
@@ -82,7 +83,7 @@ public class wordCounter {
 
 				if (preTerm1.equals("#")) {
 					
-					if (aSimpleWordSegmentator.isADigital(term)||aSimpleWordSegmentator.isEnWord(term)) {
+					if (StringRecognizer.isADigital(term)||StringRecognizer.isEnWord(term)) {
 						String newTerm = preTerm1 + term;
 						sharpedList.add(newTerm);
 						preTerm1 = newTerm;
@@ -95,8 +96,8 @@ public class wordCounter {
 					continue;
 				}
 
-				if (aSimpleWordSegmentator.isADigital(term)
-						|| aSimpleWordSegmentator.isEnWord(term)) {
+				if (StringRecognizer.isADigital(term)
+						|| StringRecognizer.isEnWord(term)) {
 					preTerm1 = term;
 					continue;
 				}

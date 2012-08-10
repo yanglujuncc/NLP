@@ -26,7 +26,7 @@ public class testCosSimilarityCompute {
 		System.out.println("v_y :"+v_y);
 		
 		
-		double result=SimilarityComputer.compute(v_x.vector, v_y.vector);
+		double result=SimilarityComputer.computeInt(v_x.vector, v_y.vector);
 		System.out.println("result="+result);
 		System.out.println("result="+15/(Math.sqrt(31)*Math.sqrt(10)));
 	}
