@@ -8,7 +8,7 @@ import java.util.List;
 
 import ylj.Dict.FileDictLoader;
 import ylj.Dict.MemDict;
-import ylj.Dict.StandardFileDictReader;
+import ylj.Dict.StandardDictReader;
 
 
 public class testMaxForwardSegmentator {
@@ -21,7 +21,7 @@ public class testMaxForwardSegmentator {
 		FileDictLoader aFileDictLoader = new FileDictLoader();
 		aFileDictLoader.setDict(aMemDict);
 		
-		StandardFileDictReader aStandardFileDictReader=new StandardFileDictReader();
+		StandardDictReader aStandardFileDictReader=new StandardDictReader();
 		aStandardFileDictReader.addDictFile("Dic/XianDaiHanYu.dic");
 		aFileDictLoader.load2MemDict(aStandardFileDictReader);
 		
@@ -57,7 +57,7 @@ public class testMaxForwardSegmentator {
 		FileDictLoader aFileDictLoader = new FileDictLoader();
 		aFileDictLoader.setDict(aMemDict);
 		
-		StandardFileDictReader aStandardFileDictReader=new StandardFileDictReader();
+		StandardDictReader aStandardFileDictReader=new StandardDictReader();
 		aStandardFileDictReader.addDictFile("Dic/XianDaiHanYu.dic");
 		aFileDictLoader.load2MemDict(aStandardFileDictReader);
 		

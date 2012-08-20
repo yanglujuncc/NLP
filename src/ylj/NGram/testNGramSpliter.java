@@ -7,11 +7,11 @@ public class testNGramSpliter {
 	public static void main(String[] args)
 	{
 		
-		String str="不捡钱了任dng务234直接出285去交任务 ？";
+		String str="89一条来人啦 有幸运xx +++++++++++++++++++++++++++++++++++++++++++++++++++++ ？";
 		
 		System.out.println(str);
 		System.out.println("****************************");
-		NGramSpliter aNGramSpliter=new NGramSpliter(2);
+		NGramSpliter aNGramSpliter=new NGramSpliter(1);
 		List<String> grams=aNGramSpliter.splite(str);
 		
 		for(String gram:grams)

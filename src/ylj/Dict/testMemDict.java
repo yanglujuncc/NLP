@@ -11,7 +11,7 @@ public class testMemDict {
 		FileDictLoader aFileDictLoader = new FileDictLoader();
 		aFileDictLoader.setDict(aMemDict);
 		
-		StandardFileDictReader aStandardFileDictReader=new StandardFileDictReader();
+		StandardDictReader aStandardFileDictReader=new StandardDictReader();
 		aStandardFileDictReader.addDictFile("Dic/XianDaiHanYu.dic");
 		aFileDictLoader.load2MemDict(aStandardFileDictReader);
 		

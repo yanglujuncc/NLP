@@ -22,6 +22,7 @@ public class GramModelTrainer {
 	
 	long maxLine;
 	List<NGramSpliter> NGramSpliters=new LinkedList<NGramSpliter>();
+	boolean enGram;
 	
 	public void setMaxLine(long aMaxLine){
 		maxLine=aMaxLine;
@@ -60,7 +61,10 @@ public class GramModelTrainer {
 				List<String> grams=aNGramSpliter.splite(aline);
 				for(String gram:grams){
 					if(StringRecognizer.isEnWord(gram))
-						model.addEngGramInstence(gram, aline);
+					{
+						if(enGram)
+							model.addEngGramInstence(gram, aline);
+					}			
 					else
 						model.addHanGramInstence(aNGramSpliter.getGramN(),gram, aline);
 				}
@@ -77,18 +81,36 @@ public class GramModelTrainer {
 		logger.info(updateModelInfo);
 		return model;
 	}
-	public void createNGramSpliter(String grams){
+	public boolean createNGramSpliter(String grams){
 		
 		logger.info("Creating NGramSpliters ...");
 		String[] NGrams=grams.split("[,£¬]");
 		
 		for(String ngram:NGrams){
-			int n=Integer.parseInt(ngram);
-			logger.info("Creating "+n +" GramSpliter .");
-			NGramSpliter newNGramSpliter=new NGramSpliter(n);
-			NGramSpliters.add(newNGramSpliter);
+			
+			if(StringRecognizer.isADigital(ngram))
+			{
+				int n=Integer.parseInt(ngram);
+				logger.info("Creating "+n +" GramSpliter .");
+				NGramSpliter newNGramSpliter=new NGramSpliter(n);
+				NGramSpliters.add(newNGramSpliter);
+			}
+			else if(StringRecognizer.isEnWord(ngram))
+			{
+				if(ngram.equalsIgnoreCase("en"))
+				{
+					enGram=true;
+				}
+				else
+				{
+					logger.info("args NGrams error :"+ngram);
+					return false;
+				}
+				
+			}
 		}
 		logger.info("Create NGramSpliters complete .");
+		return true;
 	}
 	
 	
@@ -101,14 +123,14 @@ public class GramModelTrainer {
 			System.out.println("Add Increment To Model or Train A New Model  ");
 			System.out.println("usage:GramModelTrainer	NGrams MaxLine InstancePath ModelPath ModelOuput");
 			
-			System.out.println("                       	NGrams	(like:1,2 means use 1Gram And 2Gram)");
+			System.out.println("                       	NGrams	(like:1,2,en  means use 1Gram And 2Gram )");
 			System.out.println("                       	MaxLine	(MaxLine readed in InstanceFile,or 0 not limtied)");
 			System.out.println("                       	InstancePath	(Increment Instance File Path)");
 			System.out.println("                       	ModelPath	(model to restore,or null[NULL] to create a new model)");
 			System.out.println("                       	ModelOuput	(path of the new model to store)");
 			System.out.println("Example: ");
-			System.out.println("   Add Increment:    GramModelTrainer 1,2 0 InstanceFile oldeModel updatedModel");
-			System.out.println(" Train New Model:    GramModelTrainer 1,2 0 InstanceFile NULL newModel");
+			System.out.println("   Add Increment:    GramModelTrainer 1,2,en 0 InstanceFile oldeModel updatedModel");
+			System.out.println(" Train New Model:    GramModelTrainer 1,2,en 0 InstanceFile NULL newModel");
 			System.out.println("	");
 			System.out.println("InstanceFile:");
 			System.out.println("	InstanceFile is a raw txt file.A line treat as  a instance  .");
@@ -123,7 +145,7 @@ public class GramModelTrainer {
 			return;
 		}
 		
-		String targetGram=args[0];
+		String NGrams=args[0];
 		long maxLine=Long.parseLong(args[1]);
 		if(maxLine==0)
 			maxLine=Long.MAX_VALUE;
@@ -132,7 +154,7 @@ public class GramModelTrainer {
 		String modelOutputPath=args[4];
 		
 		GramModelTrainer aGramModelTrainer=new GramModelTrainer();
-		aGramModelTrainer.createNGramSpliter(targetGram);
+		aGramModelTrainer.createNGramSpliter(NGrams);
 		aGramModelTrainer.setMaxLine(maxLine);
 		
 		GramVectorModel gramVectorModel;

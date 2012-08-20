@@ -24,46 +24,23 @@ public void doRequest(String[] args){
 	{
 		System.out.println("Find Most N Similar Grams of one Gram");
 		System.out.println("usage: GramKind N gram");
-		System.out.println("                       	GramKind	(like:1 2 EN(en) ALL(all) means use 1Gram And 2Gram or just englisgh)");
+		System.out.println("                       	GramKind	(like:1 2 EN(en)  means use 1Gram And 2Gram or just englisgh)");
 		System.out.println("                       	N	(number of Similar Grams)");
 		System.out.println("                       	gram	(target gram)");
 		System.out.println("Example: ");
-		System.out.println("    2 200  Эјвз");
+		System.out.println("    1,2,3,en 200  Эјвз");
 	
 		return ;
 	}
 	
-	String GramKind=args[0];
+	String GramKindS=args[0];
 	int neighborCounter=Integer.parseInt(args[1]);
 	String targetGram=args[2];
 	
 	ArrayList<Pair<WordVectorDig,Double>> resultPairs=null;
 	
-	if(GramKind.equals("ALL")||GramKind.equals("all"))
-	{
-		resultPairs=gramModel.getNNearestNegihbor(targetGram, neighborCounter);
-	}
-	else if(GramKind.equals("EN")||GramKind.equals("en"))
-	{
-		resultPairs=gramModel.getNNearestNegihborOfEn(targetGram, neighborCounter);
-	}
-	else if(StringRecognizer.isADigital(GramKind))
-	{
-		int ngram=Integer.parseInt(GramKind);
-		if(ngram>gramModel.NGramMAX)
-		{
-			System.out.println("input error of GramKind,GramModel support MaxGram="+gramModel.NGramMAX);
-			return ;
-		}
-		resultPairs=gramModel.getNNearestNegihborOfHan(ngram, targetGram, neighborCounter);
-		
-	}
-	else
-	{
-		System.out.println("input error of GramKind");
-		System.out.println("GramKind = all ALL EN en  1 2 3 4 ..");
-		return ;
-	}
+	String[] NGrams=GramKindS.split(",");
+	resultPairs=gramModel.getNNearestNegihborOf(NGrams,targetGram,neighborCounter);
 	
 	if(resultPairs==null)
 	{

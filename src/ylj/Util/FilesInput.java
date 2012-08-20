@@ -55,9 +55,12 @@ public class FilesInput {
 	public long total_num(){
 		return totalLine;
 	}
-	
+	public static File[] getAllSubFiles(String dirPath){
+		File dirFile=new File(dirPath);
+		return getAllSubFiles(dirFile);
+	}
 	//获取所有子文件
-	private static File[] getAllSubFiles(File dir) {
+	public static File[] getAllSubFiles(File dir) {
 		if (dir == null || !dir.isDirectory())
 			return null;
 

@@ -10,23 +10,22 @@ public class testCosSimilarityCompute {
 	public static void testCompute(){
 		
 		NGramSpliter aNGramCounter=new NGramSpliter(2);
-		NGramOccTable aNGramOccTable=new NGramOccTable(2,1);
+		
+		GramVectorModel aGramVectorModel = new GramVectorModel();
+		GramVectorModel aGramVectorModel2 = new GramVectorModel();
 		
 		String str="不捡钱了直接出去交任务 ";
 		String str2="还是不了直接出去交任务吧 ";
-
-		aNGramOccTable.addGrams(str);
 		
-		aNGramOccTable.addGrams(str2);
+		aGramVectorModel.addHanGramInstence(2, "直接", str);
+		aGramVectorModel2.addHanGramInstence(2, "直接", str2);
+	
 		
+		System.out.println("v_X :"+aGramVectorModel.getGramVectorStr("直接"));
+		System.out.println("v_y :"+aGramVectorModel2.getGramVectorStr("直接"));
+	
 		
-		GramVector<Integer> v_x=aNGramOccTable.getIntVector("任务");
-		GramVector<Integer> v_y=aNGramOccTable.getIntVector("还是");
-		System.out.println("v_X :"+v_x);
-		System.out.println("v_y :"+v_y);
-		
-		
-		double result=SimilarityComputer.computeInt(v_x.vector, v_y.vector);
+		double result=SimilarityComputer.computeLong(aGramVectorModel.getGramVectorDig("直接").vector, aGramVectorModel2.getGramVectorDig("直接").vector);
 		System.out.println("result="+result);
 		System.out.println("result="+15/(Math.sqrt(31)*Math.sqrt(10)));
 	}

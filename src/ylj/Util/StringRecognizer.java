@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 public class StringRecognizer {
 
-	static String hanziReg="[\u4e00-\u9fa5]";
+	static String hanziReg="[\u4e00-\u9fa5]+";
 	static Pattern hanziPattern=Pattern.compile(hanziReg);
 	static Matcher  hanziMatcher=hanziPattern.matcher("");
 	
@@ -39,9 +39,7 @@ public class StringRecognizer {
 	
 	public static boolean isCN_zhWord(String  str){
 		
-		if(str.length()!=1)
-			return false;
-		
+	
 		hanziMatcher.reset(str);
 		
 		if(hanziMatcher.matches())

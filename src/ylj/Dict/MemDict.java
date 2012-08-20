@@ -1,9 +1,19 @@
 package ylj.Dict;
 
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 public class MemDict implements Dict{
 
@@ -257,6 +267,40 @@ public class MemDict implements Dict{
 
 
 	
-	
+	public long saveToFile(String path) throws IOException{
+		
+		Set<String> termSet=new HashSet<String>();
+		for(Entry<Character ,List<Term>> entry:invertedIndexOfWord.entrySet())
+		{
+			List<Term> termList=entry.getValue();
+			for(Term term:termList)
+			{
+				String value=term.toString();
+				termSet.add(value);
+			}
+		}
+		
+		String[] termArray=termSet.toArray(new String[termSet.size()]);
+		Arrays.sort(termArray, new Comparator<String>(){
+			@Override
+			public int compare(String arg0, String arg1) {
+				
+				return arg0.length()-arg1.length();
+			}
+			
+		});
+		
+		FileOutputStream fos=new FileOutputStream(path);
+		OutputStreamWriter ow=new OutputStreamWriter(fos);
+		BufferedWriter bw=new BufferedWriter(ow);
+			
+		
+		for(String term:termArray){
+			bw.append(term+"\n");
+			
+		}
+		bw.close();
+		return termArray.length;
+	}
 	
 }

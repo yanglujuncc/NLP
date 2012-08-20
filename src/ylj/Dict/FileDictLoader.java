@@ -35,10 +35,10 @@ public class FileDictLoader {
 		FileDictLoader aFileDictLoader = new FileDictLoader();
 		aFileDictLoader.setDict(aMemDict);
 		
-		StandardFileDictReader aStandardFileDictReader=new StandardFileDictReader();
+		StandardDictReader aStandardFileDictReader=new StandardDictReader();
 		aStandardFileDictReader.addDictFile("XianDaiHanYu.txt");
 		
-		SogouFileDictReader aSogouDictReader=new SogouFileDictReader();
+		SogouDictReader aSogouDictReader=new SogouDictReader();
 		aSogouDictReader.addDictFile("SogouLabDic.dic");
 		
 		

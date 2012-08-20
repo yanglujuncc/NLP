@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import ylj.Dict.FileDictLoader;
 import ylj.Dict.MemDict;
-import ylj.Dict.StandardFileDictReader;
+import ylj.Dict.StandardDictReader;
 
 public class AllTermsSegmentater implements Segmentater{
 	
@@ -68,7 +68,7 @@ public class AllTermsSegmentater implements Segmentater{
 		
 		FileDictLoader aFileDictLoader = new FileDictLoader();
 		aFileDictLoader.setDict(aMemDict);
-		StandardFileDictReader aStandardFileDictReader=new StandardFileDictReader();
+		StandardDictReader aStandardFileDictReader=new StandardDictReader();
 		aStandardFileDictReader.addDictFile("Dic/XianDaiHanYu.dic");
 		aFileDictLoader.load2MemDict(aStandardFileDictReader);
 		

@@ -61,8 +61,8 @@ public class testGramVectorModel {
 			System.out.println(vectorsDig.get(i).vector);
 		}
 
-		ArrayList<Pair<WordVectorDig, Double>> vectors = aGramVectorModel
-				.getNNearestNegihbor("³Ô·¹", 10);
+		String[] NGrams={"1","2"};
+		ArrayList<Pair<WordVectorDig, Double>> vectors = aGramVectorModel.getNNearestNegihborOf(NGrams,"³Ô·¹", 10);
 		for (Pair<WordVectorDig, Double> vector : vectors) {
 			System.out.println(vector);
 		}
@@ -177,6 +177,8 @@ public class testGramVectorModel {
 		System.out.println(aGramVectorModel.WordIndexer);
 		List<WordVectorStr> vectorsStr = aGramVectorModel.getAllWordVectorStr();
 		List<WordVectorDig> vectorsDig = aGramVectorModel.getAllWordVectorDig();
+		
+		
 		System.out.println("****************************");
 		for (int i = 0; i < vectorsStr.size(); i++) {
 			System.out.println(vectorsStr.get(i));
@@ -188,12 +190,65 @@ public class testGramVectorModel {
 		System.out.println(aGramVectorModel.getAllGramsOfHanGramN(1));
 		System.out.println(aGramVectorModel.getAllGramsOfHanGramN(2));
 	}
+	
+	public static void  testGetWordsOfGramStr(){
+		NGramSpliter a1GramCounter = new NGramSpliter(1);
+		NGramSpliter a2GramCounter = new NGramSpliter(2);
+		GramVectorModel aGramVectorModel = new GramVectorModel();
+
+		String[] strs = { "È¥wy³Ô·¹°É £¿", "È¥Ë¯¾õhello°É £¿" };
+
+		System.out.println("****************************");
+		for (String str : strs) {
+			System.out.println(str);
+			System.out.print("1Gram:");
+			List<String> grams = a1GramCounter.splite(str);
+			for (String gram : grams) {
+				System.out.print(" " + gram);
+				if(StringRecognizer.isEnWord(gram))
+					aGramVectorModel.addEngGramInstence(gram, str);
+				else
+					aGramVectorModel.addHanGramInstence(1,gram, str);
+			}
+			System.out.println();
+			System.out.print("2Gram:");
+			grams = a2GramCounter.splite(str);
+			for (String gram : grams) {
+				System.out.print(" " + gram);
+				if(StringRecognizer.isEnWord(gram))
+					aGramVectorModel.addEngGramInstence(gram, str);
+				else
+					aGramVectorModel.addHanGramInstence(2,gram, str);
+
+			}
+			System.out.println();
+		}
+		System.out.println("****************************");
+		System.out.println(aGramVectorModel);
+		System.out.println(aGramVectorModel.GramIndexer);
+		System.out.println(aGramVectorModel.WordIndexer);
+		
+		List<WordVectorStr> vectorsStr = aGramVectorModel.getAllWordVectorStr();
+		List<WordVectorDig> vectorsDig = aGramVectorModel.getAllWordVectorDig();
+		
+		
+		System.out.println("****************************");
+		
+
+	
+	
+		System.out.println(aGramVectorModel.getAllGramsOfHanGramN(1));
+		System.out.println(aGramVectorModel.getAllGramsOfHanGramN(2));
+	
+		
+	}
 	public static void main(String[] args) {
 		
 		PropertyConfigurator.configure("conf/log4j.properties");
 		//testGetOtherGrams();
 		//testNNearestNegihbor();
-		testGetAllGrams();
+		testGetWordsOfGramStr();
+		
 		//testSerializable();
 		// testAddGrams();
 		// testGetIntVector();
