@@ -10,13 +10,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import ylj.Segmentation.ICTCLASSegmenterWraper;
 import ylj.Segmentation.Segmentater;
@@ -25,10 +25,8 @@ import ylj.Util.HashIndex;
 import ylj.Util.Index;
 import ylj.Util.StringRecognizer;
 
-public class DiglogueDocToVectorDoc {
-	 SimpleDateFormat time_format = new SimpleDateFormat(
-		"yyyy-MM-dd'T'HH:mm:ss");
-	 
+public class DiglogueDocToThreeElementRecord {
+
 	public static Set<String>  loadStopVocab(String stopVocabPath) throws IOException{
 		
 		Set<String> stopVocabMap=new HashSet<String>();
@@ -52,7 +50,15 @@ public class DiglogueDocToVectorDoc {
 		
 		return stopVocabMap;
 	}
-	
+	public static void uniq(List<String> strs){
+		
+		Set<String> strSet=new TreeSet<String>();
+		strSet.addAll(strs);
+		strs.clear();
+		
+		strs.addAll(strSet);
+		strSet.clear();
+	}
 	public static void  main(String[] args) throws Exception
 	{
 		List<DocVector> docVectorList=new LinkedList<DocVector>();
@@ -63,52 +69,69 @@ public class DiglogueDocToVectorDoc {
 		Index<String> vocabIndexer=new HashIndex<String>();
 		Index<String> docNameIndexer=new HashIndex<String>();
 	
+		int nullVocabIndex=vocabIndexer.indexOf("", true);
+		int nullDocIndex=docNameIndexer.indexOf("", true);
 		
-	
-		String vocabOutputFilePath="IM10000Vocab.txt";
-		String docNameOutputFilePath="IM10000DocName.txt";
+		System.out.println("nullVocabIndex="+nullVocabIndex);
+		System.out.println("nullDocIndex="+nullDocIndex);
 		
-		String inputFilePath="IM10000Docs";
-		String VectorDocOutputFilePath="IM10000Docs.dat";
+		Map<Long,Long> dfMap=new HashMap<Long,Long>();
+		
+		String vocabOutputFilePath="TeamDocs500Vocab.txt";
+		String docNameOutputFilePath="TeamDocs500DocName.txt";
+		
+		String inputFilePath="TeamDocs";
+		String VectorDocOutputFilePath="TeamDocs500.dat";
 		
 		InputStream is=new FileInputStream(inputFilePath);
 		InputStreamReader isr=new InputStreamReader(is,"gbk");
 		BufferedReader bReader=new BufferedReader(isr);
 		
 		System.out.println("process begin..");
-		int i=0;
+		
 		int j=0;
 		String startLine=null;
 		while((startLine=bReader.readLine())!=null)
 		{
 			
+			String contentLine=bReader.readLine();
 		
-		
+			j++;
+			
 			if(j%1000==0)
 				System.out.println("processed "+j);
 			
-			if(j==10000)
-			{
-				System.out.println("j= "+j);
-				break;
+			if(j%400!=0)
+			{	
+				continue;
 			}
 			String[] terms=startLine.split(" ");
 			String docName=terms[0];
+			String startTime=terms[1].substring("Start=".length());
+			String endTime=terms[2].substring("Last=".length());
 			
-			long docID=docNameIndexer.indexOf(docName, true);
+			String uniqDocName=docName+"@"+startTime;
+			
+			long docID=docNameIndexer.indexOf(uniqDocName, true);
+		
 			DocVector newDocVector=new DocVector(docID);
 			
-			String contentLine=bReader.readLine();
+		
 			if(contentLine==null)
 			{
 				System.err.println("something wrong !");
 			}
+			System.out.println("docName:"+uniqDocName);
+			System.out.println("docID:"+docID);
+			System.out.println("startTime:"+startTime);
+			System.out.println("endTime:"+endTime);
+			System.out.println("contentLine:"+contentLine);
 			
 			List<String> vocabs=segmenter.makeSegment(contentLine);
 			
 			for(String vocab:vocabs){		
 				
-	
+			
 				if(vocab.equals(""))
 					continue;
 				if(vocab.equals(" "))
@@ -124,9 +147,24 @@ public class DiglogueDocToVectorDoc {
 				newDocVector.addElement(vocabID);
 				
 			}
+			//System.out.println("before("+vocabs.size()+"):"+vocabs);
+			uniq(vocabs);
+			//System.out.println("after("+vocabs.size()+"):"+vocabs);
+			for(String vocab:vocabs){
+				
+				long vocabIndex=vocabIndexer.indexOf(vocab);
+				
+				long count=1;
+				Long counter=dfMap.get(vocabIndex);
+				if(counter!=null)
+					count+=counter;
+					
+				dfMap.put(vocabIndex, count);
+			}
+			
 			
 			docVectorList.add(newDocVector);
-			j++;
+			
 		}
 		bReader.close();
 		
@@ -141,10 +179,13 @@ public class DiglogueDocToVectorDoc {
 		OutputStream os=new FileOutputStream(VectorDocOutputFilePath);
 		OutputStreamWriter osr=new OutputStreamWriter(os,"gbk");
 		BufferedWriter bWriter=new BufferedWriter(osr);
+		
+		
 		System.out.println("save docVectorList To File "+VectorDocOutputFilePath);
 		for(DocVector aDocVector:docVectorList)
 		{
-			bWriter.append(aDocVector.toString()+"\n");
+			//System.out.println(aDocVector.toThreeElement());
+			bWriter.append(aDocVector.toThreeElementTF_IDF(dfMap));
 			
 		}
 		bWriter.close();

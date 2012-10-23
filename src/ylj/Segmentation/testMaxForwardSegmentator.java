@@ -91,7 +91,7 @@ public class testMaxForwardSegmentator {
 	
 	public static void main(String[] args) throws IOException{
 		// testStr() ;
-		testFile();
+		testStr() ;
 		
 	}
 }

@@ -3,32 +3,24 @@ package ylj.TopicModel;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
+
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import ylj.Segmentation.ICTCLASSegmenterWraper;
 import ylj.Segmentation.Segmentater;
-import ylj.Segmentation.StanfordSegmenterWraper;
 import ylj.Util.HashIndex;
 import ylj.Util.Index;
-import ylj.Util.StringRecognizer;
 
-public class DiglogueDocToVectorDoc {
-	 SimpleDateFormat time_format = new SimpleDateFormat(
-		"yyyy-MM-dd'T'HH:mm:ss");
-	 
+
+public class DocMatrixLoader {
 	public static Set<String>  loadStopVocab(String stopVocabPath) throws IOException{
 		
 		Set<String> stopVocabMap=new HashSet<String>();
@@ -52,10 +44,9 @@ public class DiglogueDocToVectorDoc {
 		
 		return stopVocabMap;
 	}
-	
 	public static void  main(String[] args) throws Exception
 	{
-		List<DocVector> docVectorList=new LinkedList<DocVector>();
+		
 		Segmentater segmenter=new ICTCLASSegmenterWraper();
 		Set<String>  stopVocabSet=loadStopVocab("StopVocab.txt");
 		//Segmentater segmenter=new StanfordSegmenterWraper();
@@ -94,9 +85,8 @@ public class DiglogueDocToVectorDoc {
 			}
 			String[] terms=startLine.split(" ");
 			String docName=terms[0];
-			
+		
 			long docID=docNameIndexer.indexOf(docName, true);
-			DocVector newDocVector=new DocVector(docID);
 			
 			String contentLine=bReader.readLine();
 			if(contentLine==null)
@@ -106,26 +96,8 @@ public class DiglogueDocToVectorDoc {
 			
 			List<String> vocabs=segmenter.makeSegment(contentLine);
 			
-			for(String vocab:vocabs){		
-				
-	
-				if(vocab.equals(""))
-					continue;
-				if(vocab.equals(" "))
-					continue;
-				if(StringRecognizer.isSymbol(vocab))
-					continue;
-				
-				
-				if(stopVocabSet.contains(vocab))
-					continue;
-				
-				long vocabID=vocabIndexer.indexOf(vocab, true);
-				newDocVector.addElement(vocabID);
-				
-			}
-			
-			docVectorList.add(newDocVector);
+			System.out.println("DocName:"+docName);
+			System.out.println("Content:"+contentLine);
 			j++;
 		}
 		bReader.close();
@@ -142,11 +114,8 @@ public class DiglogueDocToVectorDoc {
 		OutputStreamWriter osr=new OutputStreamWriter(os,"gbk");
 		BufferedWriter bWriter=new BufferedWriter(osr);
 		System.out.println("save docVectorList To File "+VectorDocOutputFilePath);
-		for(DocVector aDocVector:docVectorList)
-		{
-			bWriter.append(aDocVector.toString()+"\n");
 			
-		}
+		
 		bWriter.close();
 	}
 	

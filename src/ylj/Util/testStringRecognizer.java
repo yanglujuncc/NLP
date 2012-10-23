@@ -23,5 +23,35 @@ public class testStringRecognizer {
 		}
 		*/
 		System.out.println(StringRecognizer.isCN_zhWord("扂+"));
+		System.out.println(StringRecognizer.getRepeatCount("######++"));
+		
+		System.out.println(StringRecognizer.getRepeatStr("伂排伂排伂排伂排伂排伂排伂排"));
+		System.out.println(StringRecognizer.getRepeatCount("伂排伂排伂排伂排伂排伂排伂排"));
+		System.out.println(StringRecognizer.shortRepeatFormat("伂排伂排伂排伂排伂排伂排伂排"));
+		System.out.println();
+		String shrot=StringRecognizer.shortRepeatFormat("+++++++++++++++++++++");
+		System.out.println("shrot="+shrot);
+		System.out.println(StringRecognizer.isRepeatShortFormat(shrot));
+		
+		String symbol="~﹞*&＃＃%ㄓ#@ㄐ-〞〞=+﹜|▽{▼}˙ㄩ＊§ㄛ▲﹝◎﹜ˋ";
+		System.out.println("Symbol test:"+symbol);
+		System.out.println(StringRecognizer.isSymbol(symbol));
+		String hanzi="犖趼ugfsS11";
+		System.out.println("hanzi:"+hanzi);
+		System.out.println(StringRecognizer.isCN_zhWord(hanzi));
+		System.out.println(StringRecognizer.isCN_zhStr(hanzi));
+		System.out.println(StringRecognizer.upCase(hanzi));
+		System.out.println(Math.log(10) / Math.log(2));
+		/*
+		System.out.println(StringRecognizer.shortRepeatFormat("##"));
+		System.out.println(StringRecognizer.shortRepeatFormat("###"));
+		System.out.println(StringRecognizer.shortRepeatFormat("####"));
+		System.out.println(StringRecognizer.shortRepeatFormat("#####"));
+		System.out.println(StringRecognizer.shortRepeatFormat("+++"));
+		System.out.println(StringRecognizer.shortRepeatFormat("======="));
+		System.out.println(StringRecognizer.shortRepeatFormat("++++++"));
+		System.out.println(StringRecognizer.shortRepeatFormat("+++++++++++++++"));
+		System.out.println(StringRecognizer.shortRepeatFormat("=4+"));
+		*/
 	}
 }

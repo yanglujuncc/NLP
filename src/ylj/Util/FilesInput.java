@@ -88,14 +88,22 @@ public class FilesInput {
 	}
 	
 	
-	public long loadFromDirName(String dirName) throws IOException {
+	public long preLoadFromDirName(String dirName) throws IOException {
 
 		// System.out.println(dirName);
-		 
+		logger.info("pre Loading Dir :"+dirName);
 		 dataDir = new File(dirName);
+		 
+		 if(!dataDir.exists())
+		{
+				logger.info("File do not exists :"+dataDir.getAbsolutePath());
+				return 0;
+		}
+		
+			
 		 dataFiles = getAllSubFiles(dataDir);
 		
-	//	 System.out.println(dataFiles.length);
+		// System.out.println(dataFiles.length);
 		 totalLine=0;
 		 if(dataFiles==null)
 				return  0;
@@ -106,24 +114,21 @@ public class FilesInput {
 		 //遍历所有文件，计算总共可读取的行数
 		for (int i = 0; i < dataFiles.length; i++) {
 			File file = dataFiles[i];
+			if(!file.exists())
+			{
+				logger.info("File do not exists :"+file.getAbsolutePath());
+				continue;
+			}
+			logger.info("pre Loading File :"+file.getAbsolutePath());
 			
-			logger.info("Reading File(" + i + "/" + dataFiles.length + ")  :"
-					+ file.getName());
-			
-			FileInputStream fis = new FileInputStream(file);
-			InputStreamReader isr = new InputStreamReader(fis, characterSet);
-			BufferedReader br = new BufferedReader(isr);
-
-			while (br.readLine() != null)
-				totalLine++;
-			br.close();
+			totalLine+=preLoadFromFile(file);
 
 		}
 		
 		if (dataFiles.length > 0) {
 
 			FileInputStream fis = new FileInputStream(dataFiles[0]);
-			InputStreamReader isr = new InputStreamReader(fis, "gbk");
+			InputStreamReader isr = new InputStreamReader(fis, characterSet);
 			currentReader = new BufferedReader(isr);
 			currentFileIndex = 0;
 			
@@ -137,7 +142,45 @@ public class FilesInput {
 		return totalLine;
 
 	}
+	private long preLoadFromFile(File file) throws IOException{
+		
+		long totalLine=0;
 	
+		FileInputStream fis = new FileInputStream(file);
+		InputStreamReader isr = new InputStreamReader(fis, characterSet);
+		BufferedReader br = new BufferedReader(isr);
+
+		while (br.readLine() != null)
+			totalLine++;
+		br.close();
+		
+		
+		return totalLine;
+	}
+	public long preLoadFromFile(String filePath) throws IOException{
+		
+		long totalLine=0;
+		File file=new File(filePath);
+		if(!file.exists())
+		{
+			logger.info("File do not exists :"+file.getAbsolutePath());
+			return 0;
+		}
+		
+		logger.info("pre Loading File :"+file.getAbsolutePath());
+		
+		totalLine=preLoadFromFile(file);
+		
+		FileInputStream fis2 = new FileInputStream(filePath);
+		InputStreamReader isr2 = new InputStreamReader(fis2, characterSet);
+		currentReader = new BufferedReader(isr2);
+		currentFileIndex = 0;
+		dataFiles=new 	File[1];
+		dataFiles[0]=file;
+		readline=0;
+		
+		return totalLine;
+	}
 	public void addFile(String path) throws IOException{
 		 
 		int newFileIndex=0;
@@ -201,8 +244,7 @@ public class FilesInput {
 				currentFileIndex++;
 
 				if (currentFileIndex < dataFiles.length) {
-					FileInputStream fis = new FileInputStream(
-							dataFiles[currentFileIndex]);
+					FileInputStream fis = new FileInputStream(dataFiles[currentFileIndex]);
 					InputStreamReader isr = new InputStreamReader(fis, "gbk");
 					currentReader = new BufferedReader(isr);
 

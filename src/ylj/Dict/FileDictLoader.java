@@ -19,6 +19,8 @@ public class FileDictLoader {
 		long l=0;
 		while ((aTerm = reader.readTerm()) != null) {
 			memDict.addTerm(aTerm);
+			if(l%10000==0)
+				System.out.println("load "+l+" vocabs.. ");
 			l++;
 		}
 

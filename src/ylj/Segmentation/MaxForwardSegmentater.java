@@ -1,21 +1,49 @@
 package ylj.Segmentation;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ylj.Dict.FileDictLoader;
 import ylj.Dict.MemDict;
+import ylj.Dict.SimpleDictReader;
+import ylj.Dict.StandardDictReader;
 import ylj.Dict.Term;
 import ylj.Dict.Word;
+import ylj.Util.StringRecognizer;
 
 public class MaxForwardSegmentater implements Segmentater {
 
 	MemDict aMemDict=new MemDict();
+
+	public MaxForwardSegmentater(){
+		
+	}
 	
-	static final String symbol_reg="[+]+|[£¡!]+|[£¿?]+";
-	Pattern symbolPattern=Pattern.compile(symbol_reg);
-	
+	public MaxForwardSegmentater(String dicDirPath) throws IOException{
+		
+		File dicDir=new File(dicDirPath);
+		File[] subFiles=dicDir.listFiles();
+		
+			
+		FileDictLoader aFileDictLoader = new FileDictLoader();
+		aFileDictLoader.setDict(aMemDict);
+		
+		SimpleDictReader aSimpleDictReader=new SimpleDictReader();
+		
+		for(File dicFile:subFiles)
+		{
+			System.out.println("add dic file:"+dicFile.getAbsolutePath());
+			aSimpleDictReader.addDictFile(dicFile.getAbsolutePath());
+		}
+	    long vocabs=aFileDictLoader.load2MemDict(aSimpleDictReader);
+	    System.out.println("load :"+vocabs+" vocabs");
+		
+		
+	}
 	
 	public void setMemDict(MemDict aDict){
 		aMemDict=aDict;
@@ -35,7 +63,7 @@ public class MaxForwardSegmentater implements Segmentater {
 			//init			
 			String tempStr=sentence.substring(termBeginIndex, i);
 			
-			if(isDigitalTerm(tempStr)||isEnglish(tempStr)||isSymbol(tempStr))
+			if(StringRecognizer.isDigital(tempStr)||StringRecognizer.isEnWord(tempStr)||StringRecognizer.isSymbol(tempStr))
 				continue;
 			
 			
@@ -59,52 +87,8 @@ public class MaxForwardSegmentater implements Segmentater {
 	}
 	
 	
-	private boolean isDigitalTerm(String wordsValues)
-	{
 	
-		
-		if(wordsValues==null)
-			return false;
 	
-		for(int i=0;i<wordsValues.length();i++){
-			
-			char tempChar=wordsValues.charAt(i);
-			if(tempChar>'0'&&tempChar<'9')
-				continue;
-			else
-				return false;
-		
-		}
-		return true;
-	}
+
 	
-	private boolean isEnglish(String wordsValues){
-		if(wordsValues==null)
-			return false;
-		
-	
-		for(int i=0;i<wordsValues.length();i++){
-			
-			char tempChar=wordsValues.charAt(i);
-			if((tempChar>'A'&&tempChar<'Z')||(tempChar>'a'&&tempChar<'z'))
-				continue;
-			
-			else
-				return false;
-			
-			
-		}
-		return true;
-	}
-	private boolean isSymbol(String wordsValues){
-		if(wordsValues==null)
-			return false;
-		
-		Matcher  aSymbolMatcher=symbolPattern.matcher(wordsValues);
-		if(aSymbolMatcher.matches())
-			return true;
-		else
-			return false;
-		
-	}
 }

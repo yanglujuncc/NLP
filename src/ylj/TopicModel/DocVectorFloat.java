@@ -1,16 +1,17 @@
 package ylj.TopicModel;
 
-public class DocVector {
+public class DocVectorFloat {
+
 	
 	int docID;
 	int[] indexArray;
-	int[] valueArray;
+	float[] valueArray;
 	
-	public DocVector(int docIDValue){
+	public DocVectorFloat(int docIDValue){
 		docID=docIDValue;
 	}
 	
-	public void setElement(int[] indexs,int[] values){
+	public void setElement(int[] indexs,float[] values){
 		
 		indexArray=indexs;
 		valueArray=values;

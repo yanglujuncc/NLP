@@ -13,7 +13,9 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
-import ylj.NGram.NGramSpliter;
+import NGram.NGramSpliter;
+
+
 import ylj.Util.FilesInput;
 
 

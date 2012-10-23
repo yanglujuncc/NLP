@@ -27,7 +27,7 @@ public class UnknowWordsRecognizer {
 	
 	
 	public long setStatisticsDir(String path) throws IOException{
-		statisticsInput.loadFromDirName(path);
+		statisticsInput.preLoadFromDirName(path);
 		return statisticsInput.total_num();
 	}
 	public long setStatisticsFile(String path) throws IOException{
@@ -76,7 +76,7 @@ public class UnknowWordsRecognizer {
 	
 	public long loadDicDir(String path) throws IOException{
 		FilesInput aFilesInput=new FilesInput("gbk");
-		aFilesInput.loadFromDirName("./Dic");
+		aFilesInput.preLoadFromDirName("./Dic");
 		
 		String aline=null;
 		
